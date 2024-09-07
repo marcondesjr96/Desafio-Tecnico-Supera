@@ -11,6 +11,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 @RequiredArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -21,12 +25,36 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductOutput create(ProductInput productInput) {
-        if(productInput.getName().length() > 15){
-            throw new RuntimeException("Name exceeds the maximum number of 15 characters");
+        Product product = createProduct(productInput);
+        return ProductOutput.toOutput(productRepository.save(product));
+    }
+
+    @Override
+    public List<ProductOutput> saveList(List<ProductInput> productInputs) {
+        for (ProductInput productInput : productInputs) {
+            validateName(productInput);
         }
+        List<Product> products = productInputs.stream()
+                .map(this::createProduct)
+                .toList();
+        List<Product> savedProducts = productRepository.saveAll(products);
+
+        return savedProducts.stream()
+                .map(ProductOutput::toOutput)
+                .toList();
+    }
+
+    private Product createProduct (ProductInput productInput){
+        validateName(productInput);
         Product product = ProductInput.toEntity(productInput);
         Category category = categoryRepository.findByKeyword(productInput.getCategoryKey()).orElseThrow(RuntimeException::new);
         product.setCategory(category);
-        return ProductOutput.toOutput(productRepository.save(product));
+        return product;
+    }
+
+    private void validateName(ProductInput productInput) {
+        if(productInput.getName().length() > 15){
+            throw new RuntimeException("Name exceeds the maximum number of 15 characters");
+        }
     }
 }
