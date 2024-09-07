@@ -1,6 +1,7 @@
 package com.supera.DesafioTecnico.controller;
 
-import com.supera.DesafioTecnico.entity.Category;
+import com.supera.DesafioTecnico.dto.input.CategoryInput;
+import com.supera.DesafioTecnico.dto.output.CategoryOutput;
 import com.supera.DesafioTecnico.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +17,8 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public Category create(@RequestBody Category category){
-        return categoryService.create(category);
+    public CategoryOutput create(@RequestBody CategoryInput categoryInput) {
+        return categoryService.create(categoryInput);
     }
 
 }
