@@ -1,11 +1,13 @@
 package com.supera.DesafioTecnico.controller;
 
+import com.supera.DesafioTecnico.dto.filter.ProductStatusUpdateDTO;
 import com.supera.DesafioTecnico.dto.input.ProductInput;
 import com.supera.DesafioTecnico.dto.output.ProductOutput;
 import com.supera.DesafioTecnico.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +29,11 @@ public class ProductController {
     @PostMapping("/list")
     public List<ProductOutput> saveList (@RequestBody List<ProductInput> productInputList){
         return productService.saveList(productInputList);
+    }
+
+    @PutMapping("/list")
+    public List<ProductOutput> updateList (@RequestBody List<ProductStatusUpdateDTO> updates){
+        return productService.updateList(updates);
     }
 }
 

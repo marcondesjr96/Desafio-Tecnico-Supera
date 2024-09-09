@@ -1,5 +1,6 @@
 package com.supera.DesafioTecnico.service.impl;
 
+import com.supera.DesafioTecnico.dto.filter.ProductStatusUpdateDTO;
 import com.supera.DesafioTecnico.dto.input.ProductInput;
 import com.supera.DesafioTecnico.dto.output.ProductOutput;
 import com.supera.DesafioTecnico.entity.Category;
@@ -11,9 +12,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -42,6 +43,28 @@ public class ProductServiceImpl implements ProductService {
         return savedProducts.stream()
                 .map(ProductOutput::toOutput)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public List<ProductOutput> updateList(List<ProductStatusUpdateDTO> updates) {
+        List<Product> updatedProducts = new ArrayList<>();
+        for (ProductStatusUpdateDTO updateDTO : updates){
+            Product updatedProduct = updateProduct(updateDTO);
+            updatedProducts.add(updatedProduct);
+        }
+
+        List<Product> savedProducts = productRepository.saveAll(updatedProducts);
+
+        return savedProducts.stream()
+                .map(ProductOutput::toOutput)
+                .collect(Collectors.toList());
+    }
+
+    private Product updateProduct (ProductStatusUpdateDTO updateDTO){
+        Product product = productRepository.findById(updateDTO.getProductId()).orElseThrow(RuntimeException::new);
+        product.setStatus(updateDTO.getStatus());
+        return product;
     }
 
     private Product createProduct (ProductInput productInput){

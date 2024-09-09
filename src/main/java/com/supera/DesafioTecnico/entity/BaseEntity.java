@@ -44,6 +44,6 @@ public abstract class BaseEntity implements Serializable {
 
     @PrePersist
     public void onPrePersist() {
-        this.setStatus(StatusEnum.ENABLED);
+        this.setStatus(StatusEnum.NO_STATUS);
     }
 }
