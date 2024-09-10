@@ -1,5 +1,6 @@
 package com.supera.DesafioTecnico.service;
 
+import com.supera.DesafioTecnico.dto.filter.FilterFindProduct;
 import com.supera.DesafioTecnico.dto.input.ProductPriorityUpdateDTO;
 import com.supera.DesafioTecnico.dto.input.ProductStatusUpdateDTO;
 import com.supera.DesafioTecnico.dto.input.ProductInput;
@@ -18,5 +19,7 @@ public interface ProductService {
     List<ProductOutput> findAllOrderedByPriority(String categoryKey);
 
     List<ProductOutput> updatePriorityList(List<ProductPriorityUpdateDTO> updates);
+
+    List<ProductOutput> findByFilterProduct(FilterFindProduct filterFindProduct);
 
 }

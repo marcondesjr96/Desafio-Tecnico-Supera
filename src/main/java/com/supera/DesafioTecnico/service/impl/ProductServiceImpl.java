@@ -1,5 +1,6 @@
 package com.supera.DesafioTecnico.service.impl;
 
+import com.supera.DesafioTecnico.dto.filter.FilterFindProduct;
 import com.supera.DesafioTecnico.dto.input.ProductPriorityUpdateDTO;
 import com.supera.DesafioTecnico.dto.input.ProductStatusUpdateDTO;
 import com.supera.DesafioTecnico.dto.input.ProductInput;
@@ -11,6 +12,7 @@ import com.supera.DesafioTecnico.repository.ProductRepository;
 import com.supera.DesafioTecnico.service.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -78,6 +80,14 @@ public class ProductServiceImpl implements ProductService {
         List<Product> savedProducts = productRepository.saveAll(updatedProducts);
 
         return savedProducts.stream()
+                .map(ProductOutput::toOutput)
+                .toList();
+    }
+
+    @Override
+    public List<ProductOutput> findByFilterProduct(FilterFindProduct filterFindProduct) {
+        List<Product> filteredProducts = productRepository.findAllByFilter(filterFindProduct);
+        return filteredProducts.stream()
                 .map(ProductOutput::toOutput)
                 .toList();
     }

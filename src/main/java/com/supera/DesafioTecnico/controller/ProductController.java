@@ -1,5 +1,6 @@
 package com.supera.DesafioTecnico.controller;
 
+import com.supera.DesafioTecnico.dto.filter.FilterFindProduct;
 import com.supera.DesafioTecnico.dto.input.ProductPriorityUpdateDTO;
 import com.supera.DesafioTecnico.dto.input.ProductStatusUpdateDTO;
 import com.supera.DesafioTecnico.dto.input.ProductInput;
@@ -47,6 +48,11 @@ public class ProductController {
     @GetMapping("/list/ordered-by-priority/category/{categoryKey}")
     public List<ProductOutput> findAllOrderedByPriority(@PathVariable String categoryKey) {
         return productService.findAllOrderedByPriority(categoryKey);
+    }
+
+    @GetMapping("/list/filter")
+    public List<ProductOutput> findAllByFilterProduct(@RequestBody FilterFindProduct filterFindProduct){
+        return productService.findByFilterProduct(filterFindProduct);
     }
 }
 
