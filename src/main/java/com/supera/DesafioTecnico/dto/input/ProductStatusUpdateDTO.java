@@ -1,4 +1,4 @@
-package com.supera.DesafioTecnico.dto.filter;
+package com.supera.DesafioTecnico.dto.input;
 
 import com.supera.DesafioTecnico.entity.enums.StatusEnum;
 import lombok.AllArgsConstructor;

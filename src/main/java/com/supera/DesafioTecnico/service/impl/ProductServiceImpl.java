@@ -1,6 +1,7 @@
 package com.supera.DesafioTecnico.service.impl;
 
-import com.supera.DesafioTecnico.dto.filter.ProductStatusUpdateDTO;
+import com.supera.DesafioTecnico.dto.input.ProductPriorityUpdateDTO;
+import com.supera.DesafioTecnico.dto.input.ProductStatusUpdateDTO;
 import com.supera.DesafioTecnico.dto.input.ProductInput;
 import com.supera.DesafioTecnico.dto.output.ProductOutput;
 import com.supera.DesafioTecnico.entity.Category;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -47,10 +47,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public List<ProductOutput> updateList(List<ProductStatusUpdateDTO> updates) {
+    public List<ProductOutput> updateStatusList(List<ProductStatusUpdateDTO> updates) {
         List<Product> updatedProducts = new ArrayList<>();
-        for (ProductStatusUpdateDTO updateDTO : updates){
-            Product updatedProduct = updateProduct(updateDTO);
+        for (ProductStatusUpdateDTO updateDTO : updates) {
+            Product updatedProduct = updateStatusProduct(updateDTO);
             updatedProducts.add(updatedProduct);
         }
 
@@ -58,16 +58,43 @@ public class ProductServiceImpl implements ProductService {
 
         return savedProducts.stream()
                 .map(ProductOutput::toOutput)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    private Product updateProduct (ProductStatusUpdateDTO updateDTO){
+    @Override
+    public List<ProductOutput> findAllOrderedByPriority(String categoryKey) {
+        List<Product> orderedProducts = productRepository.findAllOrderedByPriorityAndCategoryKeyword(categoryKey.toUpperCase());
+        return orderedProducts.stream().map(ProductOutput::toOutput).toList();
+    }
+
+    @Override
+    public List<ProductOutput> updatePriorityList(List<ProductPriorityUpdateDTO> updates) {
+        List<Product> updatedProducts = new ArrayList<>();
+        for (ProductPriorityUpdateDTO updateDTO : updates) {
+            Product updatedProduct = updatePriorityProduct(updateDTO);
+            updatedProducts.add(updatedProduct);
+        }
+
+        List<Product> savedProducts = productRepository.saveAll(updatedProducts);
+
+        return savedProducts.stream()
+                .map(ProductOutput::toOutput)
+                .toList();
+    }
+
+    private Product updatePriorityProduct(ProductPriorityUpdateDTO updateDTO) {
+        Product product = productRepository.findById(updateDTO.getProductId()).orElseThrow(RuntimeException::new);
+        product.setPriority(updateDTO.getPriority());
+        return product;
+    }
+
+    private Product updateStatusProduct(ProductStatusUpdateDTO updateDTO) {
         Product product = productRepository.findById(updateDTO.getProductId()).orElseThrow(RuntimeException::new);
         product.setStatus(updateDTO.getStatus());
         return product;
     }
 
-    private Product createProduct (ProductInput productInput){
+    private Product createProduct(ProductInput productInput) {
         validateName(productInput);
         Product product = ProductInput.toEntity(productInput);
         Category category = categoryRepository.findByKeyword(productInput.getCategoryKey()).orElseThrow(RuntimeException::new);
@@ -76,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private void validateName(ProductInput productInput) {
-        if(productInput.getName().length() > 15){
+        if (productInput.getName().length() > 15) {
             throw new RuntimeException("Name exceeds the maximum number of 15 characters");
         }
     }

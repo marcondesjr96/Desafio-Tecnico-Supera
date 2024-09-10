@@ -5,7 +5,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,9 +40,4 @@ public abstract class BaseEntity implements Serializable {
 
     @Column(nullable = false)
     private StatusEnum status;
-
-    @PrePersist
-    public void onPrePersist() {
-        this.setStatus(StatusEnum.NO_STATUS);
-    }
 }

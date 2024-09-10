@@ -1,9 +1,11 @@
 package com.supera.DesafioTecnico.entity;
 
+import com.supera.DesafioTecnico.entity.enums.StatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Category extends BaseEntity{
+public class Category extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
@@ -28,5 +30,10 @@ public class Category extends BaseEntity{
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", orphanRemoval = true)
     private List<Product> product;
+
+    @PrePersist
+    public void onPrePersist() {
+        this.setStatus(StatusEnum.ENABLED);
+    }
 
 }
