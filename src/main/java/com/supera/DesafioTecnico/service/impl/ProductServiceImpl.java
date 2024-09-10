@@ -1,9 +1,9 @@
 package com.supera.DesafioTecnico.service.impl;
 
 import com.supera.DesafioTecnico.dto.filter.FilterFindProduct;
+import com.supera.DesafioTecnico.dto.input.ProductInput;
 import com.supera.DesafioTecnico.dto.input.ProductPriorityUpdateDTO;
 import com.supera.DesafioTecnico.dto.input.ProductStatusUpdateDTO;
-import com.supera.DesafioTecnico.dto.input.ProductInput;
 import com.supera.DesafioTecnico.dto.output.ProductOutput;
 import com.supera.DesafioTecnico.entity.Category;
 import com.supera.DesafioTecnico.entity.Product;
@@ -12,7 +12,6 @@ import com.supera.DesafioTecnico.repository.ProductRepository;
 import com.supera.DesafioTecnico.service.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
